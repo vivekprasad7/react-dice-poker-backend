@@ -12,7 +12,7 @@ const playerRouter = express.Router()
 playerRouter.get("/", async(req, res) => {
     try {
         const players = await getPlayers()
-        res.status(200).json({message:"Players Retrieved Successfully"})
+        res.status(200).json({message:"Players Retrieved Successfully", players})
     } catch (error) {
         res.status(500).json({error:"Failed to retrieve players from the database", error})
     }
@@ -20,7 +20,8 @@ playerRouter.get("/", async(req, res) => {
 
 playerRouter.post("/", async(req, res) => {
     try {
-        const { playerData} = req.body;
+        console.log("req.body", req.body)
+        const  playerData = req.body;
         const addedPlayer = await addPlayer(playerData)
         if (addedPlayer) {
             res.status(200).json({ message: "Player added successfully", addedPlayer });
@@ -34,8 +35,8 @@ playerRouter.post("/", async(req, res) => {
 
 playerRouter.delete("/", async (req, res) => {
     try {
-        const result = await playerController.deleteAllPlayers();
-        res.status(200).json({ message: "All players deleted successfully", result });
+        const deletedPlayers = await deleteAllPlayers();
+        res.status(200).json({ message: "All players deleted successfully", deletedPlayers });
     } catch (error) {
         res.status(500).json({ error: "Failed to delete all players", error });
     }
@@ -43,7 +44,7 @@ playerRouter.delete("/", async (req, res) => {
 
 playerRouter.get("/winner", async (req, res) => {
     try {
-        const winner = await playerController.getWinner();
+        const winner = await getWinner();
         res.status(200).json({ message: "Winner Retrieved Successfully", winner });
     } catch (error) {
         res.status(500).json({ error: "Failed to retrieve winner", error });

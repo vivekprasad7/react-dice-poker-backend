@@ -23,24 +23,25 @@ const getPlayers = async () => {
         const allPlayers = await Player.find()
         console.log("Players Fetched Successfully from DB,", allPlayers)
         return allPlayers
-    } catch(errpr){
-        console.error("Error while fetching players from the database:", error.message)
+    } catch(error){
+        console.error("Error while fetching players from the database:", error)
     }
 }
 
-const deleteAllPlayers = async (req, res) => {
+const deleteAllPlayers = async () => {
     try {
+        const deletedPlayers = await Player.find()
         await Player.deleteMany();
 
-        res.status(200).json({ message: 'All players deleted successfully' });
+        console.log({ message: 'All players deleted successfully' });
+        return deletedPlayers;
     } catch (error) {
         console.error('Error:', error.message);
-        res.status(500).json({ message: 'Internal server error' });
     }
 }
 
 
-const getWinner =  async (req, res) =>  {
+const getWinner = async (req, res) => {
     try {
         const players = await Player.find();
 
@@ -48,14 +49,18 @@ const getWinner =  async (req, res) =>  {
         for (let i = 1; i < players.length; i++) {
             if (players[i].points > highestPointsPlayer.points) {
                 highestPointsPlayer = players[i];
+            } else if (players[i].points === highestPointsPlayer.points) {
+                if (players[i].sum > highestPointsPlayer.sum) {
+                    highestPointsPlayer = players[i];
+                }
             }
         }
-        res.json(highestPointsPlayer);
+        return highestPointsPlayer;
     } catch (error) {
         console.error('Error:', error.message);
-        res.status(500).json({ message: 'Internal server error' });
     }
 }
+
 
 
 
