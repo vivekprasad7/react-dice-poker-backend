@@ -23,14 +23,6 @@ app.use(express.json())
 
 app.use("/players", playerRouter);
 
-async function insert()
-{
-    await Player.create({
-        name:"Vivek"
-    })
-}
-insert()
-
 
 
 app.get("/",(req, res) => {
